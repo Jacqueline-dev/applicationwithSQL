@@ -1,27 +1,20 @@
 from sqlite3 import Binary
-
 import sqlalchemy
 from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy import Column, String
-from sqlalchemy import Integer
+from sqlalchemy import (Column, String, Integer, ForeignKey, LargeBinary)
+
+
 
 Base = declarative_base()
 
 
-class Collumn:
-    pass
-
-
-class Interge:
-    pass
-
 
 class Customer(Base):
     __tablename__ = "customer_account"
-    id = Collumn(Interge, primary_key=True)
-    name = Collumn(String)
-    cpf = Collumn(String(9))
-    address = Collumn(String(9))
+    id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String)
+    cpf = Column(String(9))
+    address = Column(String(9))
 
     account = relationship(
         "Account", back_populates="customer", cascade="all, delete-orphan"
@@ -31,21 +24,14 @@ class Customer(Base):
          return f"Customer(id={self.id}, name={self.name}, cpf={self.cpf}, address={self.address})"
 
 
-class Unique:
-    pass
-
-
-class Foreignkey:
-    pass
-
 
 class Account(Base):
     __tablename__ = "account"
-    id = Collumn(Binary, primary_key=True)
-    account_type = Collumn(String)
-    agency = Collumn(String)
-    number = Collumn(Interge)
-    id_customer = Collumn(Interge, Foreignkey("user_customer.id"), unique=True)
+    id = Column(LargeBinary, primary_key=True)
+    account_type = Column(String)
+    agency = Column(String)
+    number = Column(Integer)
+    id_customer = Column(Integer, ForeignKey("user_customer.id"), unique=True)
 
     user = relationship(
         "customer", back_populates="account"
@@ -56,4 +42,4 @@ class Account(Base):
 
 
 print(Customer.__tablename__)
-print((Account.__tablename__)
+print(Account.__tablename__)
