@@ -2,9 +2,7 @@ from _pydecimal import Decimal
 from sqlite3 import Binary
 import sqlalchemy
 from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy import (Column, String, Integer, ForeignKey, LargeBinary)
-
-
+from sqlalchemy import (Column, String, Integer, ForeignKey, LargeBinary, create_engine)
 
 Base = declarative_base()
 
@@ -22,8 +20,7 @@ class Customer(Base):
     )
 
     def __repr__(self):
-         return f"Customer(id={self.id}, name={self.name}, cpf={self.cpf}, address={self.address})"
-
+        return f"Customer(id={self.id}, name={self.name}, cpf={self.cpf}, address={self.address})"
 
 
 class Account(Base):
@@ -45,3 +42,5 @@ class Account(Base):
 
 print(Customer.__tablename__)
 print(Account.__tablename__)
+
+engine = create_engine("sqlite://")
