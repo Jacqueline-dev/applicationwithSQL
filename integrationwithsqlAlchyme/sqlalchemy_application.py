@@ -1,3 +1,4 @@
+from _pydecimal import Decimal
 from sqlite3 import Binary
 import sqlalchemy
 from sqlalchemy.orm import declarative_base, relationship
@@ -32,6 +33,7 @@ class Account(Base):
     agency = Column(String)
     number = Column(Integer)
     id_customer = Column(Integer, ForeignKey("user_customer.id"), unique=True)
+    balance = Column(Decimal)
 
     user = relationship(
         "customer", back_populates="account"
