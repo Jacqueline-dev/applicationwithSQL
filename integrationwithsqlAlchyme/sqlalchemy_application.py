@@ -44,3 +44,5 @@ print(Customer.__tablename__)
 print(Account.__tablename__)
 
 engine = create_engine("sqlite://")
+
+Base.metadata.create_all(engine)
