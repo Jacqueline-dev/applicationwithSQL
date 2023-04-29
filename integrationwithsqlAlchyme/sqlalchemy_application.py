@@ -40,7 +40,7 @@ class Account(Base):
     )
 
     def __repr__(self):
-        return f"Account(id={self.id}, account_type={self.account_type}, agency={self.agency}, number={self.number}, id_customer={self.id_customer})"
+        return f"Account(id={self.id}, account_type={self.account_type}, agency={self.agency}, number={self.number}, id_customer={self.id_customer}, balance={self.balance})"
 
 
 print(Customer.__tablename__)
