@@ -2,7 +2,7 @@ from _pydecimal import Decimal
 from sqlite3 import Binary
 import sqlalchemy
 from sqlalchemy.orm import declarative_base, relationship, Session, session
-from sqlalchemy import (Column, String, Integer, ForeignKey, LargeBinary, create_engine, inspect)
+from sqlalchemy import (Column, String, Integer, ForeignKey, LargeBinary, create_engine, inspect, select, func)
 
 Base = declarative_base()
 
@@ -53,32 +53,54 @@ print(inspetor_engine.get_table_names())
 print(inspetor_engine.defaut_schema_name)
 
 with Session(engine) as sessions:
-    jacque = Customer (
-        name = 'Jacqueline',
-        cpf = 123456789,
-        email_address = [Customer(email_address='jacque@gmail.com')],
-        account_type = 'conta corrente',
-        number = '001',
-        id_customer = 1,
-        balance = 1550.1
+    jacque = Customer(
+        name='Jacqueline',
+        cpf=123456789,
+        email_address=[Customer(email_address='jacque@gmail.com')],
+        account_type='conta corrente',
+        number='001',
+        id_customer=1,
+        balance=1550.1
 
     )
 
+    ana = Customer(
+        name='Ana',
+        cpf=987653421,
+        email_address=[Customer(email_address='ana@outlook.com')],
+        account_type='conta corrente',
+        number='002',
+        id_customer=2,
+        balance=1550.1
 
-
-    ana = Customer (
-         name = 'Ana',
-         cpf = 987653421,
-         email_address = [Customer(email_address='ana@outlook.com')],
-         account_type = 'conta corrente',
-         number = '002',
-         id_customer = 2,
-         balance = 1550.1
-
-     )
-
-
+    )
 
     session.add_all([jacque, ana])
 
     session.commit()
+
+    stmt = Customer(Customer).where(Customer.name.in_(['Jacqueline', 'Ana']))
+    print('\nRetrieving users from filtering condition')
+    for customer in session.scalars(stmt):
+        print(customer)
+
+    stmt_account = select(Account).where(Account.user_id.in_([2]))
+    print('\nRetrieve account')
+    for account in session.scalars(stmt_account):
+        print(account)
+
+    stmt_join = select(Customer.name, Account.account_type).join_from(Customer, Account)
+    for result in session.scalars(stmt_join):
+        print(result)
+
+    connection = engine.connect()
+    results = connection.execute(stmt_join).fetchall()
+    print("\nExecuting statement next to connection")
+    for result in results:
+        print(result)
+
+    stmt_count = select(func.count('*')).select_from(Customer)
+    print('\nTotal instance in Customer')
+    for result in session.scalars(stmt_count):
+        print(result)
+
